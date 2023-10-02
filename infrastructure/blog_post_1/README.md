@@ -8,11 +8,15 @@
 
 ## Configuration Step
 
+Confirm AWS credentials are working by running the following commands:
+```
 aws configure list-profiles
 aws configure list
 aws sts get-caller-identity
+```
 
-[config file](./config/environment.ts) we will need to update this DNS_ZONE_NAME variables with the values that we want to use.
+Update the configuration file [config file](./config/environment.ts) with the values that you want to use.
+* DNS_ZONE_NAME variables with the values that we want to use.
 
 ```javascript
 export const AppConfig = {
@@ -41,7 +45,7 @@ npx cdk synth --debug -vv
 ### Setting up the environment
 These are the following stacks that will be deployed:
 ```bash
-npx cdk bootstrap --debug -vv
+npx cdk bootstrap --debug -vv --region us-east-1
 npx cdk list --debug -vv
 ```
 ```
@@ -54,7 +58,7 @@ stage-2/app-region-evacuation-service-us-east-1
 
 This command will deploy the basic infrastructure in one region(us-east-1).
 ```bash
-npx cdk deploy stage-1/* --debug -vv
+npx cdk deploy stage-1/* --debug -vv --require-approval never
 ```
 * Creates a VPC that spans a whole region. It will automatically divide the provided VPC CIDR range, and create public and private subnets per Availability Zone. Network routing for the public subnets will be configured to allow outbound access directly via an Internet Gateway. Network routing for the private subnets will be configured to allow outbound access via a set of resilient NAT Gateways (one per AZ).
 * Fargate cluster
@@ -69,16 +73,15 @@ After creating basic infrastructure in the previous step we need to recreate the
 
 ```bash
 npx cdk context --clear --debug -vv
-npx cdk context --clear --debug -vv
 npx cdk synth --debug -vv
 ```
 
 This command will deploy the dummy-server and is related infrastructure in three different regions(us-east-1, us-east-2, us-west-2):
 ```bash
-cdk deploy stage-2/* --debug -vv
+cdk deploy stage-2/* --debug -vv --require-approval never
 ```
 * Creates a public certificate in ACM:
-> **Warning** **Manual Step:** You must update the parent zone with a DNS record CNAME provided by AWS, so that AWS can confirm that you're the owner of the domain.
+> **Warning** **Manual Step:** You must update the parent zone in a ClouDNS with the NS records provided by AWS, so that AWS can confirm that you're the owner of the domain.
 * Creates Application Load Balancer with the previously created certificate
 * Creates Route53 DNS records
 * Deploys dummy server in Fargate
