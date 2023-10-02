@@ -8,16 +8,13 @@ It contains the following folders:
 ├── infrastructure
 └── README.md
 ```
-* **infrastructure**: AWS CDK configuration files.
-* **dummy-server**: AWS CDK configuration files.
-* **utilities**: AWS CDK configuration files.
+* **infrastructure**: This folder contains the infrastructure deployed by CDK.
+* **dummy-server**: This folder contains the container which runs in the infrastructure deployed previous.
 
 # External resources
 You will need to create or have the following resources before deploying these stacks:
-* AWS account.
-* DNS Hosting account. We will use https://www.cloudns.net/ (with free account)
-  * To create a domain, by the default we use **_.cloudns.ph_**
-* (optional) Docker Hub account: If you want to use your own docker image (dummy-server).
+* [Create an AWS account](https://repost.aws/knowledge-center/create-and-activate-aws-account). 
+* Create a DNS Hosting account. In this case we'll use https://www.cloudns.net/ (with free account)
 
 # Article References
 | Article Link                                            | Description                                                               | Owner         |
