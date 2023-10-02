@@ -1,0 +1,35 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: docker.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+  # Docker username
+  USERNAME: ${{ github.actor }}
+  # Docker password
+  PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: test
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: |
+        cd dummy-server/
+        docker build . --file Dockerfile --tag ${{ env.IMAGE_NAME }}:$(date +%Y%m%d)
+    - name: List docker images
+      run: docker images
+    - name: Docker login
+      run: docker login -u ${{ env.USERNAME }} -p ${{ env.PASSWORD }}
+    - name: Docker push
+      run: docker push ${{ env.IMAGE_NAME }}:$(date +%Y%m%d)
+    - name: Docker push latest version
+      run: docker tag ${{ env.IMAGE_NAME }}:$(date +%Y%m%d) ${{ env.IMAGE_NAME }}:latest ; docker push ${{ env.IMAGE_NAME }}:latest
+      
