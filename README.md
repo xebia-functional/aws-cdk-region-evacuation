@@ -1,4 +1,4 @@
-# AWS CDK TypeScript - Support for Xebia Functional Blog Posts
+# Support for Xebia Functional Blog Posts
 
 This project has been created as a support for series of blog posts, so that you can quickly deploy the infrastructure and play around with it.
 
@@ -8,7 +8,7 @@ It contains the following folders:
 ├── infrastructure
 └── README.md
 ```
-* **infrastructure**: This folder contains the infrastructure deployed by CDK.
+* **infrastructure**: This folder contains the AWS infrastructure deployed by CDK (Typescript).
 * **dummy-server**: This folder contains the container which runs in the infrastructure deployed previous.
 
 # External resources
