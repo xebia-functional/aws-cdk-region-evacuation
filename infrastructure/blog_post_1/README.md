@@ -3,20 +3,23 @@
 ## Requirements
 - AWS account credentials
   - Install AWS CLI https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
-  - Get credentials https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html
+  - Get AWS credentials https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html
 - NodeJS installation https://nodejs.org/en/download/
 
-## Configuration Step
+## Configuration Step1
+ClouDNS account and set up the following:
+* Create a DNS zone
+* Create a subdomain
+
+## Configuration Step2
 
 Confirm AWS credentials are working by running the following commands:
 ```
-aws configure list-profiles
-aws configure list
 aws sts get-caller-identity
 ```
 
-Update the configuration file [config file](./config/environment.ts) with the values that you want to use.
-* DNS_ZONE_NAME variables with the values that we want to use.
+Update the [configuration file](./config/environment.ts) with the values that you want to use.
+* DNS_ZONE_NAME: "_subdomain-yy.subdomain-xx.cloudns.ph_"
 
 ```javascript
 export const AppConfig = {
