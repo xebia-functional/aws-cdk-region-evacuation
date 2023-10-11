@@ -53,8 +53,6 @@ npx cdk bootstrap --debug -vv --region us-east-1
 ```
 
 ## Step 5 - Deploy First CDK Stack
-> **Note** **This should be deployed in a separated CDK application, because it will have a different deployment pace. It may be deployed only once or just a few times**, but for simplicity we will keep it here.
-
 This command will deploy the basic infrastructure in one region(us-east-1):
 * Creates a VPC that spans a whole region. It will automatically divide the provided VPC CIDR range, and create public and private subnets per Availability Zone. Network routing for the public subnets will be configured to allow outbound access directly via an Internet Gateway. Network routing for the private subnets will be configured to allow outbound access via a set of resilient NAT Gateways (one per AZ).
 * Fargate cluster
@@ -90,8 +88,6 @@ npx cdk synth --debug -vv
 ```
 
 ## Step 8 - Deploy Second CDK Stack
-> **Note** **This should be deployed in a separated CDK application, because it will have a different deployment pace. The microservice will need to be deployed regularly**, but for simplicity we will keep it here.
-
 In this step, we will deploy the dummy-server and is related infrastructure in (us-east-1):
 * Creates a public certificate in ACM. 
 > **Warning** So that AWS can confirm that you're the owner of the domain, Step 6 needs to be working.
