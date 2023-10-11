@@ -14,9 +14,9 @@ It contains the following folders:
 # External resources
 You will need to create or have the following resources before deploying these stacks:
 * [Create an AWS account](https://repost.aws/knowledge-center/create-and-activate-aws-account). 
-* Create a DNS Hosting account. In this case we'll use https://www.cloudns.net/ (with free account)
+* Create a DNS Hosting account in [ClouDNS](https://www.cloudns.net) (with free account)
 
 # Article References
-| Article Link                                            | Description                                                                   | Owner         |
-|---------------------------------------------------------|-------------------------------------------------------------------------------|---------------|
+| Article Link                                            | Description                                                                                                                 | Owner         |
+|---------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|---------------|
 | [first_blog_post](infrastructure/blog_post_1/README.md) | In this section we review the deployment process for this [first blog post](https://xebia.com/blog/kubernetes-and-the-jvm/) | Jaime Navarro |
