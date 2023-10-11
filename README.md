@@ -17,6 +17,6 @@ You will need to create or have the following resources before deploying these s
 * Create a DNS Hosting account in [ClouDNS](https://www.cloudns.net) (with free account)
 
 # Article References
-| Article Link                                            | Description                                                                                                                 | Owner         |
-|---------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|---------------|
-| [first_blog_post](infrastructure/blog_post_1/README.md) | In this section we review the deployment process for this [first blog post](https://xebia.com/blog/kubernetes-and-the-jvm/) | Jaime Navarro |
+| Article Link                                                      | Description                                                                                                                                | Owner         |
+|-------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| [first blog post](https://xebia.com/blog/kubernetes-and-the-jvm/) | In this section we review the deployment process for the related [infrastrcuture for this blog post](infrastructure/blog_post_1/README.md) | Jaime Navarro |
