@@ -1,0 +1,12 @@
+*.js
+!infrastructure/blog_post_1/jest.config.js
+*.d.ts
+node_modules
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
+cdk.context.json
+
+# IntelliJ
+.idea/**
