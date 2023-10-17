@@ -7,20 +7,25 @@
 - NodeJS installation https://nodejs.org/en/download/
 
 ## Step 1 - Confirm AWS credentials
-Confirm AWS credentials are working by running the following commands:
-```
+After getting AWS credentials, you will need to make sure that you pick the right ones(if you have more than one):
+```bash
 aws configure list-profiles
+export AWS_DEFAULT_PROFILE=xxxxxxxxxx
+export AWS_DEFAULT_REGION=us-east-1
+```
+Confirm AWS credentials are working by running the following commands:
+```bash
 aws configure list
 aws sts get-caller-identity
 ```
 
 ## Step 2 - Configuration
-> **Warning** Update the following domains with your value.
+> **Warning** Update the default public DNS domain (_subdomain-**2**.subdomain-**1**.cloudns.ph_) with your own domain name.
 
 In [ClouDNS](https://www.cloudns.net) set up the following:
 * Create a free DNS Hosted Zone (Example case: subdomain-**xx**.cloudns.ph)
 
-In this GitHub repository, update the [configuration file](./config/environment.ts) with the values that you want to use.
+In this GitHub repository, update the [configuration file](./config/environment.ts) with your own public domain name.
 * DNS_ZONE_NAME: "_subdomain-**yy**.subdomain-**xx**.cloudns.ph_"
 
 ```javascript
@@ -40,20 +45,23 @@ These are the following steps to build the project:
 npm install -dd
 npm run build -dd
 ```
+
+## Step 4 - Setting up AWS CloudFormation
+* It sets up the necessary AWS resources and configurations required to deploy your CDK stacks in CloudFormation.
+```bash
+npx cdk bootstrap --debug -vv --region us-east-1
+```
+
 * AWS CDK Synth the project
 ```bash
 npx cdk context --clear
 npx cdk synth --debug -vv
 ```
 
-## Step 4 - Setting up AWS CloudFormation
-It sets up the necessary AWS resources and configurations required to deploy your CDK stack
-```bash
-npx cdk bootstrap --debug -vv --region us-east-1
-```
+
 
 ## Step 5 - Deploy First CDK Stack
-This command will deploy the basic infrastructure in one region(us-east-1):
+This command will deploy the basic infrastructure in region us-east-1:
 * Creates a VPC that spans a whole region. It will automatically divide the provided VPC CIDR range, and create public and private subnets per Availability Zone. Network routing for the public subnets will be configured to allow outbound access directly via an Internet Gateway. Network routing for the private subnets will be configured to allow outbound access via a set of resilient NAT Gateways (one per AZ).
 * Fargate cluster
 * Route53 DNS public zone
@@ -61,6 +69,7 @@ This command will deploy the basic infrastructure in one region(us-east-1):
 ```bash
 npx cdk deploy stage-1/* --debug -vv --require-approval never
 ```
+You can review the status of your CDK deployment from AWS console [CloudFormation](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1)
 
 ## Step 6 - Configure ClouDNS with the NS records from AWS route53
 Go to [AWS Route 53](https://us-east-1.console.aws.amazon.com/route53/v2/hostedzones?region=us-east-1#) the hosted zone created in the previous step.
@@ -73,42 +82,45 @@ ns-1055.awsdns-03.org.
 ns-724.awsdns-26.net.
 ```
 
-Go to your account in [ClouDNS](https://www.cloudns.net/) and open your free DNS zone (For our example was subdomain-**xx**.cloudns.ph).
-Add four NS records one for each authoritative DNS servers.
+Go to your account in [ClouDNS](https://www.cloudns.net/) and open your free DNS zone (For our example was subdomain-**xx**.cloudns.ph). We will add four NS records, one for each authoritative DNS servers
 * Type: NS record
-* Host: subdomain-yyy.subdomain-xxx.cloudns.ph
+* Host: subdomain-**yy**.subdomain-**xx**.cloudns.ph
 * Points to: ns-231.awsdns-28.com
 
+You can confirm that the NS records are working fine by using the following online tool. **Keep in mind to use your own domain name. (For our example was subdomain-**xx**.cloudns.ph)**
+* https://dnschecker.org/#NS/subdomain-2.subdomain-1.cloudns.ph
 
 ## Step 7 - Update CDK Context with the new resources
-After creating basic infrastructure in the previous step we need to recreate the file cdk.context.json
+After creating basic infrastructure in the previous step we need to recreate the file cdk.context.json, which keeps information of the infrastructure in AWS, for that purpose we will use the following commands:
 ```bash
 npx cdk context --clear --debug -vv
 npx cdk synth --debug -vv
 ```
 
 ## Step 8 - Deploy Second CDK Stack
-In this step, we will deploy the dummy-server and is related infrastructure in (us-east-1):
-* Creates a public certificate in ACM. 
-> **Warning** So that AWS can confirm that you're the owner of the domain, Step 6 needs to be working.
+In this step, we will deploy web container tasks (dummy-server) in Fargate Cluster and its related infrastructure in (us-east-1):
+* Deploys the web container tasks (dummy-server) in Fargate Cluster
+* Creates a public certificate in ACM. ( Step 6 needs to be working)
 * Creates Application Load Balancer with the previously created certificate
-* Creates Route53 DNS records
-* Deploys dummy server in Fargate
+* Creates Route53 DNS records to reach the web container.
 
 ```bash
 cdk deploy stage-2/* --debug -vv --require-approval never
 ```
-
-
+You can review the status of your CDK deployment from AWS console [CloudFormation](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1)
 
 ## Validations Steps
 You can use the following online resources to confirm that your public endpoint is available and the certificate is valid.
-> **Warning** Update the following domains with your value.
-* https://dnschecker.org/#A/edge-us-east-1.subdomain-2.subdomain-1.cloudns.ph
-* https://www.sslshopper.com/ssl-checker.html#hostname=https://edge-us-east-1.subdomain-2.subdomain-1.cloudns.ph/
-
+> **Warning** Update the following domains with your own domain name.
+* Online DNS validation tool: https://dnschecker.org/#A/edge-us-east-1.subdomain-2.subdomain-1.cloudns.ph
+* Online SSL/TLS validation tool: https://www.sslshopper.com/ssl-checker.html#hostname=https://edge-us-east-1.subdomain-2.subdomain-1.cloudns.ph/
+```bash
+curl -v https://edge-us-east-1.subdomain-2.subdomain-1.cloudns.ph
+```
 
 ## Remove all resources from your AWS account
+In order to remove all the resources go to your [cloudformation console](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1) and delete the stacks in the inverse order:
+1. stage-2/app-region-evacuation-service-us-east-1 (*app-region-evacuation-service*)
+2. stage-1/app-region-evacuation-basic-infrastructure-us-east-1 (*app-region-evacuation-basic-infrastructure*)
 
-https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1
 
