@@ -17,6 +17,9 @@ You will need to create or have the following resources before deploying these s
 * Create a DNS Hosting account in [ClouDNS](https://www.cloudns.net) (with free account)
 
 # Article References
-| Article Link                                                      | Description                                                                                                                                     | Owner         |
-|-------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
-| [first blog post](https://xebia.com/blog/kubernetes-and-the-jvm/) | In this section, we will review the deployment process for the related [infrastructure in this blog post](infrastructure/blog_post_1/README.md) | Jaime Navarro |
+| Article Link                                                                                   | Description                                                                                                                                     | Owner         |
+|------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| [Revisiting networking concepts from the client’s perspective](https://xebia.com/blog/)        | The first article doesn't have any infrastructure to be deployed                                                                                | Jaime Navarro |
+| [Deploy and Secure Web Public Endpoints](https://xebia.com/blog/)                              | In this section, we will review the deployment process for the related [infrastructure in this blog post](infrastructure/blog_post_2/README.md) | Jaime Navarro |
+| [Region Evacuation with DNS approach](https://xebia.com/blog/)                                 | In this section, we will review the deployment process for the related [infrastructure in this blog post](infrastructure/blog_post_3/README.md) | Jaime Navarro |
+| [Region Evacuation with static anycast IP approach](https://xebia.com/blog/)                   | In this section, we will review the deployment process for the related [infrastructure in this blog post](infrastructure/blog_post_4/README.md) | Jaime Navarro |

@@ -1,5 +1,5 @@
 *.js
-!infrastructure/blog_post_1/jest.config.js
+!infrastructure/blog_post_2/jest.config.js
 *.d.ts
 node_modules
 
