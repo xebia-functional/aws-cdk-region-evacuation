@@ -1,5 +1,7 @@
 # Support for Xebia Functional Blog Posts
 
+[![Docker Image CI](https://github.com/jaimenavarro/aws-cdk-region-evacuation/actions/workflows/docker-ci.yml/badge.svg)](https://github.com/jaimenavarro/aws-cdk-region-evacuation/actions/workflows/docker-ci.yml)
+
 This project has been created as a support for a series of blog posts so that you can quickly deploy the infrastructure and play around with it.
 
 It contains the following folders:
