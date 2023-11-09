@@ -6,12 +6,12 @@ This project has been created as a support for a series of blog posts so that yo
 
 It contains the following folders:
 ```
-├── dummy-server
 ├── infrastructure
+├── web-server-container
 └── README.md
 ```
 * **infrastructure**: This folder contains the AWS infrastructure deployed by CDK (Typescript).
-* **dummy-server**: This folder contains the container that runs in the infrastructure deployed previously.
+* **web-server-container**: This folder contains the web server container that runs inside the infrastructure deployed previously.
 
 # External resources
 You will need to create or have the following resources before deploying these stacks:

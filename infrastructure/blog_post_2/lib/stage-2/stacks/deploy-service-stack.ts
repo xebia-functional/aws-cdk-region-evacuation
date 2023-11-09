@@ -72,7 +72,7 @@ export class DeployServiceStack extends Stack {
   }
 
   /**
-   * Create Fargate Service and its related ALB for our dummy-server container
+   * Create Fargate Service and its related ALB for our web-server container
    * @param cluster
    * @param certificate
    * @param props

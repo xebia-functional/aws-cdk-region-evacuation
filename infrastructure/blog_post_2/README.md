@@ -98,8 +98,8 @@ npx cdk synth --debug -vv
 ```
 
 ## Step 8 - Deploy Second CDK Stack
-In this step, we will deploy web container tasks (dummy-server) in Fargate Cluster and its related infrastructure in (us-east-1):
-* Deploys the web container tasks (dummy-server) in Fargate Cluster
+In this step, we will deploy web container tasks (web-server-container) in Fargate Cluster and its related infrastructure in (us-east-1):
+* Deploys the web container tasks in Fargate Cluster
 * Creates a public certificate in ACM. ( Step 6 needs to be working)
 * Creates Application Load Balancer with the previously created certificate
 * Creates Route53 DNS records to reach the web container.
@@ -121,6 +121,7 @@ curl -v https://edge-us-east-1.subdomain-2.subdomain-1.cloudns.ph
 ## Remove all resources from your AWS account
 In order to remove all the resources go to your [cloudformation console](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1) and delete the stacks in the inverse order:
 1. stage-2/app-region-evacuation-service-us-east-1 (*app-region-evacuation-service*)
-2. stage-1/app-region-evacuation-basic-infrastructure-us-east-1 (*app-region-evacuation-basic-infrastructure*)
+2. Remove the DNS records with type CNAME in [Route 53](https://us-east-1.console.aws.amazon.com/route53/v2/hostedzones?region=us-east-1#) created by Certificates Manager
+3. stage-1/app-region-evacuation-basic-infrastructure-us-east-1 (*app-region-evacuation-basic-infrastructure*)
 
 
