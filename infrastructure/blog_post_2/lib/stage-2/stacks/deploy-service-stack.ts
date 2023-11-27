@@ -3,9 +3,9 @@ import ec2 = require('aws-cdk-lib/aws-ec2');
 import ecs = require('aws-cdk-lib/aws-ecs');
 import ecs_patterns = require('aws-cdk-lib/aws-ecs-patterns');
 import * as acm from 'aws-cdk-lib/aws-certificatemanager';
-import { Duration, Stack, StackProps, Tags } from 'aws-cdk-lib';
+import { Duration, Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { AppConfig, TAG_RESOURCES_USED_BY_ROUTE53_ARC_READINESS } from '../../../config/environment';
+import { AppConfig } from '../../../config/environment';
 import { LoadBalancerTarget } from 'aws-cdk-lib/aws-route53-targets';
 
 /**
@@ -14,7 +14,6 @@ import { LoadBalancerTarget } from 'aws-cdk-lib/aws-route53-targets';
  * 2. Deploys an application load balancer
  * 3. Deploys a container inside Fargate cluster
  * 4. Creates public DNS records to reach the load balancer
- * 5. Creates a CloudWatch alarm to monitor the health of the service
  */
 export class DeployServiceStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps) {
@@ -72,7 +71,7 @@ export class DeployServiceStack extends Stack {
   }
 
   /**
-   * Create Fargate Service and its related ALB for our dummy-server container
+   * Create Fargate Service and its related ALB for our web-server container
    * @param cluster
    * @param certificate
    * @param props
@@ -85,16 +84,12 @@ export class DeployServiceStack extends Stack {
     const fargateAlbService = new ecs_patterns.ApplicationLoadBalancedFargateService(this, 'FargateService', {
       cluster: cluster,
       certificate: certificate,
-      loadBalancerName: 'edge-' + props.env?.region,
+      loadBalancerName: AppConfig.INTERNAL_DNS + '-' + props.env?.region,
       taskImageOptions: {
         image: ecs.ContainerImage.fromRegistry(AppConfig.DOCKER_IMAGE),
         environment: { REGION: `${props.env?.region}` }
       }
     });
-    Tags.of(fargateAlbService.loadBalancer).add(
-      TAG_RESOURCES_USED_BY_ROUTE53_ARC_READINESS.key,
-      TAG_RESOURCES_USED_BY_ROUTE53_ARC_READINESS.value
-    );
 
     // Configure targetGroup in our ALB
     fargateAlbService.targetGroup.configureHealthCheck({
@@ -109,7 +104,7 @@ export class DeployServiceStack extends Stack {
   }
 
   /**
-   * Create DNS record to reach the ALB from the internet
+   * Create DNS record to reach the ALB from the Internet
    * @param hostedZone
    * @param fargateAlbService
    * @param props
@@ -122,7 +117,7 @@ export class DeployServiceStack extends Stack {
     // Create DNS A Record to reach our service
     new route53.ARecord(this, 'Record', {
       zone: hostedZone,
-      recordName: 'edge-' + props.env?.region,
+      recordName: AppConfig.INTERNAL_DNS + '-' + props.env?.region,
       target: route53.RecordTarget.fromAlias(new LoadBalancerTarget(fargateAlbService.loadBalancer)),
       ttl: Duration.minutes(1),
       comment: 'Created from cdk'

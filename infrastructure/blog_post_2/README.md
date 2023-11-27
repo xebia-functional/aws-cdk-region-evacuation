@@ -26,7 +26,7 @@ In [ClouDNS](https://www.cloudns.net) set up the following:
 * Create a free DNS Hosted Zone (Example case: subdomain-**xx**.cloudns.ph)
 
 In this GitHub repository, update the [configuration file](./config/environment.ts) with your own public domain name.
-* DNS_ZONE_NAME: "_subdomain-**yy**.subdomain-**xx**.cloudns.ph_"
+* DNS_ZONE_NAME: "_subdomain-2.subdomain-**xx**.cloudns.ph_"
 
 ```javascript
 export const AppConfig = {
@@ -34,7 +34,7 @@ export const AppConfig = {
   CLUSTER_NAME: 'fargate-test',
   APP_NAME: 'app-region-evacuation',
   DNS_ZONE_NAME: 'subdomain-2.subdomain-1.cloudns.ph',
-  INTERNAL_DNS: 'edge'
+  INTERNAL_DNS: 'web-container'
 };
 ```
 
@@ -84,7 +84,7 @@ ns-724.awsdns-26.net.
 
 Go to your account in [ClouDNS](https://www.cloudns.net/) and open your free DNS zone (For our example was subdomain-**xx**.cloudns.ph). We will add four NS records, one for each authoritative DNS servers
 * Type: NS record
-* Host: subdomain-**yy**.subdomain-**xx**.cloudns.ph
+* Host: subdomain-2.subdomain-**xx**.cloudns.ph
 * Points to: ns-231.awsdns-28.com
 
 You can confirm that the NS records are working fine by using the following online tool. **Keep in mind to use your own domain name. (For our example was subdomain-**xx**.cloudns.ph)**
@@ -98,8 +98,8 @@ npx cdk synth --debug -vv
 ```
 
 ## Step 8 - Deploy Second CDK Stack
-In this step, we will deploy web container tasks (dummy-server) in Fargate Cluster and its related infrastructure in (us-east-1):
-* Deploys the web container tasks (dummy-server) in Fargate Cluster
+In this step, we will deploy web container tasks (web-server-container) in Fargate Cluster and its related infrastructure in (us-east-1):
+* Deploys the web container tasks in Fargate Cluster
 * Creates a public certificate in ACM. ( Step 6 needs to be working)
 * Creates Application Load Balancer with the previously created certificate
 * Creates Route53 DNS records to reach the web container.
@@ -112,15 +112,16 @@ You can review the status of your CDK deployment from AWS console [CloudFormatio
 ## Validations Steps
 You can use the following online resources to confirm that your public endpoint is available and the certificate is valid.
 > **Warning** Update the following domains with your own domain name.
-* Online DNS validation tool: https://dnschecker.org/#A/edge-us-east-1.subdomain-2.subdomain-1.cloudns.ph
-* Online SSL/TLS validation tool: https://www.sslshopper.com/ssl-checker.html#hostname=https://edge-us-east-1.subdomain-2.subdomain-1.cloudns.ph/
+* Online DNS validation tool: https://dnschecker.org/#A/web-container-us-east-1.subdomain-2.subdomain-1.cloudns.ph
+* Online SSL/TLS validation tool: https://www.sslshopper.com/ssl-checker.html#hostname=https://web-container-us-east-1.subdomain-2.subdomain-1.cloudns.ph/
 ```bash
-curl -v https://edge-us-east-1.subdomain-2.subdomain-1.cloudns.ph
+curl -v https://web-container-us-east-1.subdomain-2.subdomain-1.cloudns.ph
 ```
 
 ## Remove all resources from your AWS account
 In order to remove all the resources go to your [cloudformation console](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1) and delete the stacks in the inverse order:
 1. stage-2/app-region-evacuation-service-us-east-1 (*app-region-evacuation-service*)
-2. stage-1/app-region-evacuation-basic-infrastructure-us-east-1 (*app-region-evacuation-basic-infrastructure*)
+2. Remove the DNS records with type CNAME in [Route 53](https://us-east-1.console.aws.amazon.com/route53/v2/hostedzones?region=us-east-1#) created by Certificates Manager
+3. stage-1/app-region-evacuation-basic-infrastructure-us-east-1 (*app-region-evacuation-basic-infrastructure*)
 
 
