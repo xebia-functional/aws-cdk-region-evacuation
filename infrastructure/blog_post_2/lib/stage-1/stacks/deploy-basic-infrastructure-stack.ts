@@ -1,9 +1,9 @@
 import route53 = require('aws-cdk-lib/aws-route53');
 import ec2 = require('aws-cdk-lib/aws-ec2');
 import ecs = require('aws-cdk-lib/aws-ecs');
-import { Stack, StackProps, Tags } from 'aws-cdk-lib';
+import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { AppConfig, PRIMARY_REGION, TAG_RESOURCES_USED_BY_ROUTE53_ARC_READINESS } from '../../../config/environment';
+import { AppConfig, PRIMARY_REGION } from '../../../config/environment';
 
 /**
  * Stack for deploying the basic infrastructure in one region
@@ -17,13 +17,9 @@ export class DeployBasicInfrastructureStack extends Stack {
     if (props?.env?.region === PRIMARY_REGION) {
       this.createRoute53PublicHostedZone();
     }
-    // Create VPC and ECS Cluster in each region
+    // Create VPC in each region
     const vpc = new ec2.Vpc(this, 'MyVpc', { vpcName: AppConfig.VPC_NAME, maxAzs: 2 });
-    Tags.of(vpc).add(
-      TAG_RESOURCES_USED_BY_ROUTE53_ARC_READINESS.key,
-      TAG_RESOURCES_USED_BY_ROUTE53_ARC_READINESS.value
-    );
-    // Create ECS Cluster
+    // Create ECS Cluster in each region
     new ecs.Cluster(this, 'Cluster', { clusterName: AppConfig.CLUSTER_NAME, vpc });
   }
 
@@ -33,7 +29,7 @@ export class DeployBasicInfrastructureStack extends Stack {
   private createRoute53PublicHostedZone() {
     new route53.PublicHostedZone(this, 'create-dns-zone.cloudns.ph', {
       zoneName: AppConfig.DNS_ZONE_NAME,
-      comment: 'Edge deployment for sandbox-1'
+      comment: 'Web container public hosted zone'
     });
   }
 }

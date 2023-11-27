@@ -9,7 +9,7 @@ interface DeployBasicInfrastructureStageProps extends StageProps {
 
 /**
  * Stage for deploying the basic infrastructure in all the regions
- * 1. Create Route53 Public Hosted Zone and Activate DNSSEC
+ * 1. Create Route53 Public Hosted Zone
  * 2. Create VPC and ECS Cluster in each region
  */
 export class DeployBasicInfrastructureStage extends Stage {

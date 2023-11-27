@@ -3,9 +3,9 @@ import ec2 = require('aws-cdk-lib/aws-ec2');
 import ecs = require('aws-cdk-lib/aws-ecs');
 import ecs_patterns = require('aws-cdk-lib/aws-ecs-patterns');
 import * as acm from 'aws-cdk-lib/aws-certificatemanager';
-import { Duration, Stack, StackProps, Tags } from 'aws-cdk-lib';
+import { Duration, Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { AppConfig, TAG_RESOURCES_USED_BY_ROUTE53_ARC_READINESS } from '../../../config/environment';
+import { AppConfig } from '../../../config/environment';
 import { LoadBalancerTarget } from 'aws-cdk-lib/aws-route53-targets';
 
 /**
@@ -90,10 +90,6 @@ export class DeployServiceStack extends Stack {
         environment: { REGION: `${props.env?.region}` }
       }
     });
-    Tags.of(fargateAlbService.loadBalancer).add(
-      TAG_RESOURCES_USED_BY_ROUTE53_ARC_READINESS.key,
-      TAG_RESOURCES_USED_BY_ROUTE53_ARC_READINESS.value
-    );
 
     // Configure targetGroup in our ALB
     fargateAlbService.targetGroup.configureHealthCheck({

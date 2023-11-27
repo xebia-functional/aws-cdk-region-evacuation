@@ -13,7 +13,6 @@ interface DeploymentServiceStageProps extends StageProps {
  * 2. Deploys an application load balancer
  * 3. Deploys a container inside Fargate cluster
  * 4. Creates public DNS records to reach the load balancer
- * 5. Creates a CloudWatch alarm to monitor the health of the service
  */
 export class DeployServiceStage extends Stage {
   constructor(scope: Construct, id: string, props: DeploymentServiceStageProps) {
