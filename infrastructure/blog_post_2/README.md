@@ -26,7 +26,7 @@ In [ClouDNS](https://www.cloudns.net) set up the following:
 * Create a free DNS Hosted Zone (Example case: subdomain-**xx**.cloudns.ph)
 
 In this GitHub repository, update the [configuration file](./config/environment.ts) with your own public domain name.
-* DNS_ZONE_NAME: "_subdomain-**yy**.subdomain-**xx**.cloudns.ph_"
+* DNS_ZONE_NAME: "_subdomain-2.subdomain-**xx**.cloudns.ph_"
 
 ```javascript
 export const AppConfig = {
@@ -34,7 +34,7 @@ export const AppConfig = {
   CLUSTER_NAME: 'fargate-test',
   APP_NAME: 'app-region-evacuation',
   DNS_ZONE_NAME: 'subdomain-2.subdomain-1.cloudns.ph',
-  INTERNAL_DNS: 'edge'
+  INTERNAL_DNS: 'web-container'
 };
 ```
 
@@ -84,7 +84,7 @@ ns-724.awsdns-26.net.
 
 Go to your account in [ClouDNS](https://www.cloudns.net/) and open your free DNS zone (For our example was subdomain-**xx**.cloudns.ph). We will add four NS records, one for each authoritative DNS servers
 * Type: NS record
-* Host: subdomain-**yy**.subdomain-**xx**.cloudns.ph
+* Host: subdomain-2.subdomain-**xx**.cloudns.ph
 * Points to: ns-231.awsdns-28.com
 
 You can confirm that the NS records are working fine by using the following online tool. **Keep in mind to use your own domain name. (For our example was subdomain-**xx**.cloudns.ph)**
@@ -112,10 +112,10 @@ You can review the status of your CDK deployment from AWS console [CloudFormatio
 ## Validations Steps
 You can use the following online resources to confirm that your public endpoint is available and the certificate is valid.
 > **Warning** Update the following domains with your own domain name.
-* Online DNS validation tool: https://dnschecker.org/#A/edge-us-east-1.subdomain-2.subdomain-1.cloudns.ph
-* Online SSL/TLS validation tool: https://www.sslshopper.com/ssl-checker.html#hostname=https://edge-us-east-1.subdomain-2.subdomain-1.cloudns.ph/
+* Online DNS validation tool: https://dnschecker.org/#A/web-container-us-east-1.subdomain-2.subdomain-1.cloudns.ph
+* Online SSL/TLS validation tool: https://www.sslshopper.com/ssl-checker.html#hostname=https://web-container-us-east-1.subdomain-2.subdomain-1.cloudns.ph/
 ```bash
-curl -v https://edge-us-east-1.subdomain-2.subdomain-1.cloudns.ph
+curl -v https://web-container-us-east-1.subdomain-2.subdomain-1.cloudns.ph
 ```
 
 ## Remove all resources from your AWS account
