@@ -41,6 +41,10 @@ export const AppConfig = {
 
 ## Step 3 - Build
 These are the following steps to build the project:
+* Make sure you are in the right folder
+```bash
+cd infrastructure/blog_post_2
+```
 * Install javascript dependencies
 ```bash
 npm install -dd
