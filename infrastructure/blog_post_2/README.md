@@ -30,16 +30,21 @@ In this GitHub repository, update the [configuration file](./config/environment.
 
 ```javascript
 export const AppConfig = {
-  VPC_NAME: 'fargate-test',
-  CLUSTER_NAME: 'fargate-test',
+  VPC_NAME: 'vpc-web-container',
+  CLUSTER_NAME: 'fargate-cluster-web-container',
   APP_NAME: 'app-region-evacuation',
   DNS_ZONE_NAME: 'subdomain-2.subdomain-1.cloudns.ph',
-  INTERNAL_DNS: 'web-container'
+  INTERNAL_DNS: 'web-container',
+  DOCKER_IMAGE: 'jaimenavarro/web-container'
 };
 ```
 
 ## Step 3 - Build
 These are the following steps to build the project:
+* Make sure you are in the right folder
+```bash
+cd infrastructure/blog_post_2
+```
 * Install javascript dependencies
 ```bash
 npm install -dd
