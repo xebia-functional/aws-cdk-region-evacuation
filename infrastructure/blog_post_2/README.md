@@ -65,7 +65,7 @@ npx cdk synth --debug -vv
 
 
 
-## Step 5 - Deploy First CDK Stack
+## Step 5 - Deploy First CDK Stage
 This command will deploy the basic infrastructure in region us-east-1:
 * Creates a VPC that spans a whole region. It will automatically divide the provided VPC CIDR range, and create public and private subnets per Availability Zone. Network routing for the public subnets will be configured to allow outbound access directly via an Internet Gateway. Network routing for the private subnets will be configured to allow outbound access via a set of resilient NAT Gateways (one per AZ).
 * Fargate cluster
@@ -102,7 +102,7 @@ npx cdk context --clear --debug -vv
 npx cdk synth --debug -vv
 ```
 
-## Step 8 - Deploy Second CDK Stack
+## Step 8 - Deploy Second CDK Stage
 In this step, we will deploy web container tasks (web-server-container) in Fargate Cluster and its related infrastructure in (us-east-1):
 * Deploys the web container tasks in Fargate Cluster
 * Creates a public certificate in ACM. ( Step 6 needs to be working)

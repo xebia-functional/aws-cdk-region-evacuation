@@ -24,7 +24,7 @@ export class DeployServiceStack extends Stack {
     const hostedZone = this.lookUpForPublicHostedZone();
     const certificate = this.createSSLCertificate(hostedZone);
     const fargateAlbService = this.createApplicationLoadBalancedFargateService(cluster, certificate, props);
-    this.createDNSRecordForApplicationALBService(hostedZone, fargateAlbService, props);
+    this.createDNSRecordTypeSimple(hostedZone, fargateAlbService, props);
   }
 
   /**
@@ -109,13 +109,13 @@ export class DeployServiceStack extends Stack {
    * @param fargateAlbService
    * @param props
    */
-  private createDNSRecordForApplicationALBService(
+  private createDNSRecordTypeSimple(
     hostedZone: route53.IHostedZone,
     fargateAlbService: ecs_patterns.ApplicationLoadBalancedFargateService,
     props: StackProps
   ) {
     // Create DNS A Record to reach our service
-    new route53.ARecord(this, 'Record', {
+    new route53.ARecord(this, 'record-simple', {
       zone: hostedZone,
       recordName: AppConfig.INTERNAL_DNS + '-' + props.env?.region,
       target: route53.RecordTarget.fromAlias(new LoadBalancerTarget(fargateAlbService.loadBalancer)),
