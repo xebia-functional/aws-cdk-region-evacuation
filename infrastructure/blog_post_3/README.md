@@ -43,7 +43,7 @@ export const AppConfig = {
 These are the following steps to build the project:
 * Make sure you are in the right folder
 ```bash
-cd infrastructure/blog_post_2
+cd infrastructure/blog_post_3
 ```
 * Install javascript dependencies
 ```bash
@@ -55,6 +55,7 @@ npm run build -dd
 * It sets up the necessary AWS resources and configurations required to deploy your CDK stacks in CloudFormation.
 ```bash
 npx cdk bootstrap --debug -vv --region us-east-1
+npx cdk bootstrap --debug -vv --region us-east-2
 ```
 
 * AWS CDK Synth the project
@@ -66,7 +67,7 @@ npx cdk synth --debug -vv
 
 
 ## Step 5 - Deploy First CDK Stage
-This command will deploy the basic infrastructure in region us-east-1:
+This command will deploy the basic infrastructure in region us-east-1, us-east-2:
 * Creates a VPC that spans a whole region. It will automatically divide the provided VPC CIDR range, and create public and private subnets per Availability Zone. Network routing for the public subnets will be configured to allow outbound access directly via an Internet Gateway. Network routing for the private subnets will be configured to allow outbound access via a set of resilient NAT Gateways (one per AZ).
 * Fargate cluster
 * Route53 DNS public zone
@@ -74,10 +75,12 @@ This command will deploy the basic infrastructure in region us-east-1:
 ```bash
 npx cdk deploy stage-1/* --debug -vv --require-approval never
 ```
-You can review the status of your CDK deployment from AWS console [CloudFormation](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1)
+You can review the status of your CDK deployment from AWS console 
+* [CloudFormation us-east-1](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1)
+* [CloudFormation us-east-2](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-2)
 
 ## Step 6 - Configure ClouDNS with the NS records from AWS route53
-Go to [AWS Route 53](https://us-east-1.console.aws.amazon.com/route53/v2/hostedzones?region=us-east-1#) the hosted zone created in the previous step.
+Go to [AWS Route 53](https://us-east-1.console.aws.amazon.com/route53/v2/hostedzones) the hosted zone created in the previous step.
 Copy the NS records related to the authoritative DNS servers.
 * Example values:
 ```
@@ -103,7 +106,7 @@ npx cdk synth --debug -vv
 ```
 
 ## Step 8 - Deploy Second CDK Stage
-In this step, we will deploy web container tasks (web-server-container) in Fargate Cluster and its related infrastructure in (us-east-1):
+In this step, we will deploy web container tasks (web-server-container) in Fargate Cluster and its related infrastructure in (us-east-1, us-east-2):
 * Deploys the web container tasks in Fargate Cluster
 * Creates a public certificate in ACM. ( Step 6 needs to be working)
 * Creates Application Load Balancer with the previously created certificate
@@ -112,15 +115,25 @@ In this step, we will deploy web container tasks (web-server-container) in Farga
 ```bash
 cdk deploy stage-2/* --debug -vv --require-approval never
 ```
-You can review the status of your CDK deployment from AWS console [CloudFormation](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1)
+You can review the status of your CDK deployment from AWS console:
+* [CloudFormation us-east-1](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1)
+* [CloudFormation us-east-2](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-2)
 
 ## Validations Steps
 You can use the following online resources to confirm that your public endpoint is available and the certificate is valid.
 > **Warning** Update the following domains with your own domain name.
-* Online DNS validation tool: https://dnschecker.org/#A/web-container-us-east-1.subdomain-2.subdomain-1.cloudns.ph
-* Online SSL/TLS validation tool: https://www.sslshopper.com/ssl-checker.html#hostname=https://web-container-us-east-1.subdomain-2.subdomain-1.cloudns.ph/
+* Online DNS validation tool: 
+  * https://dnschecker.org/#A/web-container-us-east-1.subdomain-2.subdomain-1.cloudns.ph
+  * https://dnschecker.org/#A/web-container-us-east-2.subdomain-2.subdomain-1.cloudns.ph
+  * https://dnschecker.org/#A/latency-endpoint.subdomain-2.subdomain-1.cloudns.ph
+* Online SSL/TLS validation tool:
+  * https://www.sslshopper.com/ssl-checker.html#hostname=https://web-container-us-east-1.subdomain-2.subdomain-1.cloudns.ph/
+  * https://www.sslshopper.com/ssl-checker.html#hostname=https://web-container-us-east-2.subdomain-2.subdomain-1.cloudns.ph/
+  * https://www.sslshopper.com/ssl-checker.html#hostname=https://latency-endpoint.subdomain-2.subdomain-1.cloudns.ph/
 ```bash
 curl -v https://web-container-us-east-1.subdomain-2.subdomain-1.cloudns.ph
+curl -v https://web-container-us-east-2.subdomain-2.subdomain-1.cloudns.ph
+curl -v https://latency-endpoint.subdomain-2.subdomain-1.cloudns.ph
 ```
 
 ## Remove all resources from your AWS account

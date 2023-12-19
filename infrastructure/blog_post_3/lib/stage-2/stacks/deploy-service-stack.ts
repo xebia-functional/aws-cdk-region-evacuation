@@ -7,6 +7,7 @@ import { Duration, Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { AppConfig } from '../../../config/environment';
 import { LoadBalancerTarget } from 'aws-cdk-lib/aws-route53-targets';
+import { CfnHealthCheck } from 'aws-cdk-lib/aws-route53';
 
 /**
  * Stack for deploying the service in one region
@@ -25,6 +26,7 @@ export class DeployServiceStack extends Stack {
     const certificate = this.createSSLCertificate(hostedZone);
     const fargateAlbService = this.createApplicationLoadBalancedFargateService(cluster, certificate, props);
     this.createDNSRecordTypeSimple(hostedZone, fargateAlbService, props);
+    this.createDNSRecordTypeLatency(hostedZone, fargateAlbService, props);
   }
 
   /**
@@ -104,7 +106,7 @@ export class DeployServiceStack extends Stack {
   }
 
   /**
-   * Create DNS record to reach the ALB from the Internet
+   * Create DNS record with routing policy simple
    * @param hostedZone
    * @param fargateAlbService
    * @param props
@@ -114,7 +116,7 @@ export class DeployServiceStack extends Stack {
     fargateAlbService: ecs_patterns.ApplicationLoadBalancedFargateService,
     props: StackProps
   ) {
-    // Create DNS A Record to reach our service
+    // Create DNS Record - Routing Policy Simple
     new route53.ARecord(this, 'record-simple', {
       zone: hostedZone,
       recordName: AppConfig.INTERNAL_DNS + '-' + props.env?.region,
@@ -122,5 +124,48 @@ export class DeployServiceStack extends Stack {
       ttl: Duration.minutes(1),
       comment: 'Created from cdk'
     });
+  }
+
+  /**
+   * Create DNS record with routing policy latency
+   * @param hostedZone
+   * @param fargateAlbService
+   * @param props
+   * @private
+   */
+  private createDNSRecordTypeLatency(
+    hostedZone: route53.IHostedZone,
+    fargateAlbService: ecs_patterns.ApplicationLoadBalancedFargateService,
+    props: StackProps
+  ) {
+    // Create DNS Record - Routing Policy Latency
+    const record = new route53.ARecord(this, `record-latency`, {
+      zone: hostedZone,
+      recordName: AppConfig.LATENCY_DNS_RECORD,
+      target: route53.RecordTarget.fromAlias(new LoadBalancerTarget(fargateAlbService.loadBalancer)),
+      ttl: Duration.minutes(1),
+      comment: `Created for CDK in region ${props.env?.region}`
+    });
+
+    // Create a health check
+    const cfnHealthCheck = new CfnHealthCheck(this, `health-check`, {
+      healthCheckConfig: {
+        type: 'HTTPS',
+        failureThreshold: 3,
+        fullyQualifiedDomainName: `${AppConfig.INTERNAL_DNS}-${props.env?.region}.${AppConfig.DNS_ZONE_NAME}`,
+        port: 443,
+        requestInterval: 10,
+        resourcePath: '/',
+        measureLatency: true
+      },
+      // the properties below are optional
+      healthCheckTags: [{ key: 'Name', value: `routing-control-${props.env?.region}` }]
+    });
+
+    // Update the DNS record with the health check
+    const recordSet = record.node.defaultChild as route53.CfnRecordSet;
+    recordSet.region = `${props.env?.region}`;
+    recordSet.setIdentifier = `latency-${props.env?.region}`;
+    recordSet.healthCheckId = cfnHealthCheck.ref;
   }
 }
