@@ -1,5 +1,9 @@
 # Guide to deploy this infrastructure on AWS
 
+## CDK Deployment Overview
+
+![CDK Deployment Overview](./doc/CDK_Deployment_Overview.jpeg)
+
 ## Step 0 - Install dependencies
 - AWS account credentials
   - Install AWS CLI https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
