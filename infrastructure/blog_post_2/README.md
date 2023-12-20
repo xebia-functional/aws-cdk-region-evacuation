@@ -1,5 +1,9 @@
 # Guide to deploy this infrastructure on AWS
 
+## CDK Deployment Overview
+The accompanying diagram illustrates the architecture of our deployed infrastructure, showcasing the relationships between key components. While the CDK stacks deploy infrastructure inside AWS Cloud, for external components like the DNS provider (ClouDNS), we will need to execute manual steps, highlighted in the following diagram
+![CDK Deployment Overview](./doc/CDK_Deployment_Overview.jpeg)
+
 ## Step 0 - Install dependencies
 - AWS account credentials
   - Install AWS CLI https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
