@@ -129,8 +129,8 @@ curl -v https://web-container-us-east-1.subdomain-2.subdomain-1.cloudns.ph
 
 ## Remove all resources from your AWS account
 In order to remove all the resources go to your [cloudformation console](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1) and delete the stacks in the inverse order:
-1. stage-2/app-region-evacuation-service-us-east-1 (*app-region-evacuation-service*)
-2. Remove the DNS records with type CNAME in [Route 53](https://us-east-1.console.aws.amazon.com/route53/v2/hostedzones?region=us-east-1#) created by Certificates Manager
-3. stage-1/app-region-evacuation-basic-infrastructure-us-east-1 (*app-region-evacuation-basic-infrastructure*)
-
-
+1. Remove the DNS records with type CNAME in [Route 53](https://us-east-1.console.aws.amazon.com/route53/v2/hostedzones?region=us-east-1#) created by Certificates Manager
+2. Execute the following commands:
+```bash
+npx cdk destroy stage-2/app-region-evacuation-service-us-east-1 stage-1/app-region-evacuation-basic-infrastructure-us-east-1
+```
