@@ -58,13 +58,13 @@ npm run build -dd
 ## Step 4 - Setting up AWS CloudFormation
 * It sets up the necessary AWS resources and configurations required to deploy your CDK stacks in CloudFormation.
 ```bash
-npx cdk bootstrap --debug -vv --region us-east-1
+npx cdk bootstrap  --region us-east-1
 ```
 
 * AWS CDK Synth the project
 ```bash
 npx cdk context --clear
-npx cdk synth --debug -vv
+npx cdk synth 
 ```
 
 
@@ -76,7 +76,7 @@ This command will deploy the basic infrastructure in region us-east-1:
 * Route53 DNS public zone
 
 ```bash
-npx cdk deploy stage-1/* --debug -vv --require-approval never
+npx cdk deploy stage-1/*  --require-approval never
 ```
 You can review the status of your CDK deployment from AWS console [CloudFormation](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1)
 
@@ -102,8 +102,8 @@ You can confirm that the NS records are working fine by using the following onli
 ## Step 7 - Update CDK Context with the new resources
 After creating basic infrastructure in the previous step we need to recreate the file cdk.context.json, which keeps information of the infrastructure in AWS, for that purpose we will use the following commands:
 ```bash
-npx cdk context --clear --debug -vv
-npx cdk synth --debug -vv
+npx cdk context --clear 
+npx cdk synth 
 ```
 
 ## Step 8 - Deploy Second CDK Stage
@@ -114,7 +114,7 @@ In this step, we will deploy web container tasks (web-server-container) in Farga
 * Creates Route53 DNS records to reach the web container.
 
 ```bash
-cdk deploy stage-2/* --debug -vv --require-approval never
+cdk deploy stage-2/* --require-approval never
 ```
 You can review the status of your CDK deployment from AWS console [CloudFormation](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1)
 
@@ -129,8 +129,8 @@ curl -v https://web-container-us-east-1.subdomain-2.subdomain-1.cloudns.ph
 
 ## Remove all resources from your AWS account
 In order to remove all the resources go to your [cloudformation console](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1) and delete the stacks in the inverse order:
-1. stage-2/app-region-evacuation-service-us-east-1 (*app-region-evacuation-service*)
-2. Remove the DNS records with type CNAME in [Route 53](https://us-east-1.console.aws.amazon.com/route53/v2/hostedzones?region=us-east-1#) created by Certificates Manager
-3. stage-1/app-region-evacuation-basic-infrastructure-us-east-1 (*app-region-evacuation-basic-infrastructure*)
-
-
+1. Remove the DNS records with type CNAME in [Route 53](https://us-east-1.console.aws.amazon.com/route53/v2/hostedzones?region=us-east-1#) created by Certificates Manager
+2. Execute the following commands:
+```bash
+npx cdk destroy stage-2/* stage-1/*
+```
