@@ -116,7 +116,7 @@ npx cdk synth
 ```
 
 ## Step 8 - Deploy Second CDK Stage
-In this step, we will deploy web container tasks (web-server-container) in Fargate Cluster and its related infrastructure in (us-east-1, us-east-2):
+In this step, we will deploy web container tasks (web-server-container) in Fargate Cluster and its related infrastructure in (us-east-1, us-west-2):
 * Deploys the web container tasks in Fargate Cluster
 * Creates a public certificate in ACM. ( Step 6 needs to be working)
 * Creates Application Load Balancer with the previously created certificate
@@ -134,16 +134,16 @@ You can use the following online resources to confirm that your public endpoint 
 > **Warning** Update the following domains with your own domain name.
 * Online DNS validation tool: 
   * https://dnschecker.org/#A/web-container-us-east-1.subdomain-2.subdomain-1.cloudns.ph
-  * https://dnschecker.org/#A/web-container-us-east-2.subdomain-2.subdomain-1.cloudns.ph
+  * https://dnschecker.org/#A/web-container-us-west-2.subdomain-2.subdomain-1.cloudns.ph
   * https://dnschecker.org/#A/latency-endpoint.subdomain-2.subdomain-1.cloudns.ph
 * Online SSL/TLS validation tool:
   * https://www.sslshopper.com/ssl-checker.html#hostname=https://web-container-us-east-1.subdomain-2.subdomain-1.cloudns.ph/
-  * https://www.sslshopper.com/ssl-checker.html#hostname=https://web-container-us-east-2.subdomain-2.subdomain-1.cloudns.ph/
+  * https://www.sslshopper.com/ssl-checker.html#hostname=https://web-container-us-west-2.subdomain-2.subdomain-1.cloudns.ph/
   * https://www.sslshopper.com/ssl-checker.html#hostname=https://latency-endpoint.subdomain-2.subdomain-1.cloudns.ph/
 * HTTP Client validation:
 ```bash
 curl -v https://web-container-us-east-1.subdomain-2.subdomain-1.cloudns.ph
-curl -v https://web-container-us-east-2.subdomain-2.subdomain-1.cloudns.ph
+curl -v https://web-container-us-west-2.subdomain-2.subdomain-1.cloudns.ph
 curl -v https://latency-endpoint.subdomain-2.subdomain-1.cloudns.ph
 ```
 
