@@ -10,6 +10,6 @@ export const AppConfig = {
 };
 
 // Regions where the app will be deployed (stage-1 and stage-2)
-export const TargetRegions = ['us-east-1', 'us-east-2'];
+export const TargetRegions = ['us-east-1', 'us-west-2'];
 
 export const PRIMARY_REGION = 'us-east-1';
