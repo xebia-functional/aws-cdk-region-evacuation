@@ -15,8 +15,9 @@ After getting AWS credentials, you will need to make sure that you pick the righ
 ```bash
 aws configure list-profiles
 export AWS_DEFAULT_PROFILE=xxxxxxxxxx
-export AWS_DEFAULT_REGION=us-east-1
+export AWS_PROFILE=xxxxxxxxxx
 ```
+
 Confirm AWS credentials are working by running the following commands:
 ```bash
 aws configure list
