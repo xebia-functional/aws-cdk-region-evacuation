@@ -114,7 +114,7 @@ In this step, we will deploy web container tasks (web-server-container) in Farga
 * Creates Route53 DNS records to reach the web container.
 
 ```bash
-cdk deploy stage-2/* --require-approval never
+npx cdk deploy stage-2/* --require-approval never
 ```
 You can review the status of your CDK deployment from AWS console [CloudFormation](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1)
 
