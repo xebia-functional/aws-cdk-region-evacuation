@@ -1,8 +1,8 @@
 import { Duration, Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { Accelerator, ClientAffinity, Listener } from 'aws-cdk-lib/aws-globalaccelerator';
+import { Accelerator, ClientAffinity } from 'aws-cdk-lib/aws-globalaccelerator';
 import { AppConfig, TargetRegions } from '../../../config/environment';
-import { ApplicationLoadBalancer, IApplicationLoadBalancer } from 'aws-cdk-lib/aws-elasticloadbalancingv2';
+import { ApplicationLoadBalancer } from 'aws-cdk-lib/aws-elasticloadbalancingv2';
 import { ApplicationLoadBalancerEndpoint } from 'aws-cdk-lib/aws-globalaccelerator-endpoints';
 import * as route53 from 'aws-cdk-lib/aws-route53';
 import { GlobalAcceleratorDomainTarget } from 'aws-cdk-lib/aws-route53-targets';
@@ -25,16 +25,17 @@ export class DeployGlobalAcceleratorStack extends Stack {
       clientAffinity: ClientAffinity.SOURCE_IP
     });
 
-    // Get the load balancer information from each region based on the tags
-    props.appLoadBalancedFargateServices.forEach((appLoadBalancedFargateService) => {
+    for (const region of TargetRegions) {
+      const appLoadBalancedFargateService = props.appLoadBalancedFargateServices.pop();
+
       // Create the Load Balancer
-      const alb = ApplicationLoadBalancer.fromApplicationLoadBalancerAttributes(this, 'alb-' + Math.random(), {
-        loadBalancerArn: appLoadBalancedFargateService.loadBalancer.loadBalancerArn,
-        securityGroupId: appLoadBalancedFargateService.loadBalancer.connections.securityGroups[0].securityGroupId
+      const alb = ApplicationLoadBalancer.fromApplicationLoadBalancerAttributes(this, 'alb-' + region, {
+        loadBalancerArn: appLoadBalancedFargateService?.loadBalancer.loadBalancerArn ?? '',
+        securityGroupId: appLoadBalancedFargateService?.loadBalancer.connections.securityGroups[0].securityGroupId ?? ''
       });
 
       // Create Endpoint Group
-      listener.addEndpointGroup('group-' + Math.random(), {
+      listener.addEndpointGroup('group-' + region, {
         endpoints: [
           new ApplicationLoadBalancerEndpoint(alb, {
             weight: 128,
@@ -42,7 +43,7 @@ export class DeployGlobalAcceleratorStack extends Stack {
           })
         ]
       });
-    });
+    }
   }
 
   private createDNSRecordForGlobalAccelerator(accelerator: Accelerator) {
@@ -59,23 +60,5 @@ export class DeployGlobalAcceleratorStack extends Stack {
       comment: `CDK global accelerator DNS`
     });
     dnsRecord.node.addDependency(accelerator);
-  }
-
-  private createLoadBalancer(region: string, loadBalancerDetails: []) {
-    return ApplicationLoadBalancer.fromApplicationLoadBalancerAttributes(this, 'alb-' + region, {
-      loadBalancerArn: loadBalancerDetails[TargetRegions.indexOf(region)][0],
-      securityGroupId: loadBalancerDetails[TargetRegions.indexOf(region)][1]
-    });
-  }
-
-  private addEndpointGroupToListener(region: string, listener: Listener, alb: IApplicationLoadBalancer) {
-    return listener.addEndpointGroup('group-' + region, {
-      endpoints: [
-        new ApplicationLoadBalancerEndpoint(alb, {
-          weight: 128,
-          preserveClientIp: true
-        })
-      ]
-    });
   }
 }
