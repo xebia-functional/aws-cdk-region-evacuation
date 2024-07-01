@@ -18,7 +18,6 @@ You will need to create or have the following resources before deploying these s
 * [Create an AWS account](https://repost.aws/knowledge-center/create-and-activate-aws-account)
 * Create a DNS Hosting account in [ClouDNS](https://www.cloudns.net) (with free account)
 
-
 # Article References
 | Article Link                                                                                                                            | Description                                                                                                                   | Owner                                            |
 |-----------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|
