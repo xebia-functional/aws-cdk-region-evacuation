@@ -11,8 +11,13 @@ import { ApplicationLoadBalancedFargateService } from 'aws-cdk-lib/aws-ecs-patte
 interface DeployGlobalAcceleratorStackProps extends StackProps {
   appLoadBalancedFargateServices: Array<ApplicationLoadBalancedFargateService>;
 }
+
 /**
- * Stack for deploying the global accelerator in us-west-2
+ * Stack for deploying the global accelerator
+ * 1. Creates a global accelerator
+ * 2. Creates a DNS record for the global accelerator
+ * 3. Creates a listener for the global accelerator
+ * 4. Adds the application load balancer endpoints to the listener
  */
 export class DeployGlobalAcceleratorStack extends Stack {
   constructor(scope: Construct, id: string, props: DeployGlobalAcceleratorStackProps) {
@@ -28,7 +33,7 @@ export class DeployGlobalAcceleratorStack extends Stack {
     for (const region of TargetRegions) {
       const appLoadBalancedFargateService = props.appLoadBalancedFargateServices.pop();
 
-      // Create the Load Balancer
+      // Get values from ALB
       const alb = ApplicationLoadBalancer.fromApplicationLoadBalancerAttributes(this, 'alb-' + region, {
         loadBalancerArn: appLoadBalancedFargateService?.loadBalancer.loadBalancerArn ?? '',
         securityGroupId: appLoadBalancedFargateService?.loadBalancer.connections.securityGroups[0].securityGroupId ?? ''

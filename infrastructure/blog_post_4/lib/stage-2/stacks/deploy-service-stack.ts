@@ -1,9 +1,9 @@
-import route53 = require('aws-cdk-lib/aws-route53');
-import ec2 = require('aws-cdk-lib/aws-ec2');
-import ecs = require('aws-cdk-lib/aws-ecs');
+import * as route53 from 'aws-cdk-lib/aws-route53'
+import * as ec2 from 'aws-cdk-lib/aws-ec2'
+import * as ecs from 'aws-cdk-lib/aws-ecs'
 import ecs_patterns = require('aws-cdk-lib/aws-ecs-patterns');
 import * as acm from 'aws-cdk-lib/aws-certificatemanager';
-import { CfnOutput, Duration, Stack, StackProps } from 'aws-cdk-lib';
+import { Duration, Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { AppConfig } from '../../../config/environment';
 import { LoadBalancerTarget } from 'aws-cdk-lib/aws-route53-targets';

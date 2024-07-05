@@ -1,6 +1,6 @@
-import route53 = require('aws-cdk-lib/aws-route53');
-import ec2 = require('aws-cdk-lib/aws-ec2');
-import ecs = require('aws-cdk-lib/aws-ecs');
+import * as route53 from 'aws-cdk-lib/aws-route53'
+import * as ec2 from 'aws-cdk-lib/aws-ec2'
+import * as ecs from 'aws-cdk-lib/aws-ecs'
 import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { AppConfig, PRIMARY_REGION } from '../../../config/environment';

@@ -1,7 +1,7 @@
 import { Stage, StageProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { DeployServiceStack } from '../stacks/deploy-service-stack';
-import { AppConfig, TargetRegions } from '../../../config/environment';
+import { AppConfig } from '../../../config/environment';
 import { DeployGlobalAcceleratorStack } from '../stacks/deploy-global-accelerator-stack';
 import { ApplicationLoadBalancedFargateService } from 'aws-cdk-lib/aws-ecs-patterns';
 
@@ -10,11 +10,9 @@ interface DeploymentServiceStageProps extends StageProps {
 }
 
 /**
- * Stage for deploying the service in all the regions
- * 1. Creates certificate
- * 2. Deploys an application load balancer
- * 3. Deploys a container inside Fargate cluster
- * 4. Creates public DNS records to reach the load balancer
+ * Stage for deploying the service in multiple regions and global accelerator
+ * 1. Deploys the service in us-east-1 and us-west-2
+ * 2. Deploys the global accelerator in us-west-2
  */
 export class DeployServiceAndGlobalAcceleratorStage extends Stage {
   constructor(scope: Construct, id: string, props: DeploymentServiceStageProps) {
@@ -26,7 +24,7 @@ export class DeployServiceAndGlobalAcceleratorStage extends Stage {
       terminationProtection: false,
       env: {
         region: 'us-east-1',
-        account: process.env.CDK_DEPLOY_ACCOUNT || process.env.CDK_DEFAULT_ACCOUNT
+        account: process.env.CDK_DEPLOY_ACCOUNT ?? process.env.CDK_DEFAULT_ACCOUNT
       },
       stackName: `${AppConfig.APP_NAME}-service`,
       crossRegionReferences: true
@@ -37,7 +35,7 @@ export class DeployServiceAndGlobalAcceleratorStage extends Stage {
       terminationProtection: false,
       env: {
         region: 'us-west-2',
-        account: process.env.CDK_DEPLOY_ACCOUNT || process.env.CDK_DEFAULT_ACCOUNT
+        account: process.env.CDK_DEPLOY_ACCOUNT ?? process.env.CDK_DEFAULT_ACCOUNT
       },
       stackName: `${AppConfig.APP_NAME}-service`,
       crossRegionReferences: true
@@ -52,7 +50,7 @@ export class DeployServiceAndGlobalAcceleratorStage extends Stage {
         terminationProtection: false,
         env: {
           region: 'us-west-2',
-          account: process.env.CDK_DEPLOY_ACCOUNT || process.env.CDK_DEFAULT_ACCOUNT
+          account: process.env.CDK_DEPLOY_ACCOUNT ?? process.env.CDK_DEFAULT_ACCOUNT
         },
         stackName: `${AppConfig.APP_NAME}-global-accelerator`,
         crossRegionReferences: true,
