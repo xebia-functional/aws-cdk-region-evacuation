@@ -8,6 +8,10 @@ import * as route53 from 'aws-cdk-lib/aws-route53';
 import { GlobalAcceleratorDomainTarget } from 'aws-cdk-lib/aws-route53-targets';
 import { ApplicationLoadBalancedFargateService } from 'aws-cdk-lib/aws-ecs-patterns';
 
+/**
+ * Props for DeployGlobalAcceleratorStack
+ * appLoadBalancedFargateServices: Array of ApplicationLoadBalancedFargateService
+ */
 interface DeployGlobalAcceleratorStackProps extends StackProps {
   appLoadBalancedFargateServices: Array<ApplicationLoadBalancedFargateService>;
 }

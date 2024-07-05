@@ -133,18 +133,12 @@ You can review the status of your CDK deployment from AWS console:
 ## Validations Steps
 You can use the following online resources to confirm that your public endpoint is available and the certificate is valid.
 > **Warning** Update the following domains with your own domain name.
-* Online DNS validation tool: 
-  * https://dnschecker.org/#A/web-container-us-east-1.subdomain-2.subdomain-1.cloudns.ph
-  * https://dnschecker.org/#A/web-container-us-west-2.subdomain-2.subdomain-1.cloudns.ph
+* Online DNS validation tool:
   * https://dnschecker.org/#A/global-accelerator.subdomain-2.subdomain-1.cloudns.ph
 * Online SSL/TLS validation tool:
-  * https://www.sslshopper.com/ssl-checker.html#hostname=https://web-container-us-east-1.subdomain-2.subdomain-1.cloudns.ph/
-  * https://www.sslshopper.com/ssl-checker.html#hostname=https://web-container-us-west-2.subdomain-2.subdomain-1.cloudns.ph/
   * https://www.sslshopper.com/ssl-checker.html#hostname=https://global-accelerator.subdomain-2.subdomain-1.cloudns.ph/
 * HTTP Client validation:
 ```bash
-curl -v https://web-container-us-east-1.subdomain-2.subdomain-1.cloudns.ph
-curl -v https://web-container-us-west-2.subdomain-2.subdomain-1.cloudns.ph
 curl -v https://global-accelerator.subdomain-2.subdomain-1.cloudns.ph
 ```
 
