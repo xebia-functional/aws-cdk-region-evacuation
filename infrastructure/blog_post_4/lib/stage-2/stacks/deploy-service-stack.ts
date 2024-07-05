@@ -89,6 +89,7 @@ export class DeployServiceStack extends Stack {
     const fargateAlbService = new ecs_patterns.ApplicationLoadBalancedFargateService(this, 'FargateService', {
       cluster: cluster,
       certificate: certificate,
+      serviceName: 'app-region-evacuation-service',
       loadBalancerName: AppConfig.INTERNAL_DNS + '-' + props.env?.region,
       taskImageOptions: {
         image: ecs.ContainerImage.fromRegistry(AppConfig.DOCKER_IMAGE),
